@@ -21,6 +21,7 @@ It allows users to manage books, authors, and perform operations like borrowing 
 - Node.js
 - Express.js
 - MongoDB / Mongoose
+- JSON Web Token (JWT) for authentication
 
 ---
 

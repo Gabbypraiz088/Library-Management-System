@@ -83,6 +83,8 @@ exports.deleteBook = async(req, res, next) => {
     }
 };
 
+// Services 
+
 //Book Borrowing Logic
 exports.borrowBook = async(req, res, next) => {
     try{
