@@ -2,22 +2,22 @@ require('dotenv').config();
 const User = require("../Models/user.model");
 const bcrypt = require("bcrypt");
 const jwt = require('jsonwebtoken');
-const { authorizeRoles } = require('../middleware/rolesMiddleware');
 
-exports.createUser = async (req, res) => {
+
+exports.createUser = async (req, res, next) => {
     try{
         const{name, password, email, role, phone} = req.body
         
     // check for existing email
     const existingEmail = await User.findOne({email});
     if(existingEmail){
-        return res.status(400).json({message: 'User with Email already exist'})
+        return res.status(400).json({message: 'Email already exist'})
     }
 
     // check for existing phone number
     const existingPhone = await User.findOne({phone});
     if(existingPhone){
-        return res.status(400).json({message: 'User with same phone number already exist'})
+        return res.status(400).json({message: 'Phone number already exist'})
     }
 
     // hash password
@@ -25,36 +25,36 @@ exports.createUser = async (req, res) => {
 
     const user = await User.create({
         name, password: passwordHash, email, role, phone});
-    res.status(201).json({message: 'user created successfully'})
+    res.status(201).json({message: 'User created successfully'})
 
-    } catch(err){
-        res.status(500).json({message:'unable to create user'})
+    } catch(error){
+        next(error)
     }
 };
 
 // get all students
-exports.getStudents = async (req, res) => {
+exports.getStudents = async (req, res, next) => {
   try {
     const students = await User.find({ role: 'student' }).select('-password');
     res.status(200).json(students);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+  } catch (error) {
+    next(error);
   }
 };
 
 // get all attendants
-exports.getAttendants = async (req, res) => {
+exports.getAttendants = async (req, res, next) => {
   try {
     const attendants = await User.find({ role: 'attendant' }).select('-password');
     res.status(200).json(attendants);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+  } catch (error) {
+    next(error);
   }
 };
 
 
 // DELETE user by ID
-exports.deleteUser = async (req, res) => {
+exports.deleteUser = async (req, res, next) => {
   try {
     const { id } = req.params;
 
@@ -64,13 +64,13 @@ exports.deleteUser = async (req, res) => {
 
     await user.deleteOne();
     res.status(200).json({ message: "User deleted successfully" });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+  } catch (error) {
+    next(error);
   }
-};
+}; 
 
 // UPDATE user by ID
-exports.updateUser = async (req, res) => {
+exports.updateUser = async (req, res, next) => {
   try {
     const { id } = req.params;
     const updates = { ...req.body };
@@ -94,20 +94,20 @@ exports.updateUser = async (req, res) => {
       data: user
     });
 
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+  } catch (error) {
+    next(error);
   }
 };
 
-exports.login = async(req, res) => {
+exports.login = async(req, res, next) => {
   try{
     const{email, password} = req.body;
 
     const user = await User.findOne({email});
     if(!user){
-      return res.status(400).json({message: 'User with Email already exist'});
+      return res.status(400).json({message: 'Email already exist'});
     }
-    // compare password
+    // compare password with hashed password
     const isMatch = await bcrypt.compare(password, user.password);
     if(!isMatch){
       return res.status(400).json({message: 'Invalid credentials'});
@@ -134,7 +134,7 @@ exports.login = async(req, res) => {
 });
 
   } catch(error){
-    res.status(500).json({message: error.message})
+    next(error);
   }
 };
 

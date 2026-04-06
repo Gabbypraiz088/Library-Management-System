@@ -20,12 +20,12 @@ const bookSchema = new mongoose.Schema({
 
     borrowedBy: {
         type: mongoose.Schema.Types.ObjectId, 
-        ref: "user", 
+        ref: "User", 
         default: null},
 
     issuedBy: {
         type: mongoose.Schema.Types.ObjectId, 
-        ref: "user", 
+        ref: "User", 
         default: null},
 
     returnDate: {

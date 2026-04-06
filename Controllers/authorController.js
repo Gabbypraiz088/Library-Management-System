@@ -1,28 +1,28 @@
 const Author = require("../Models/authors.model");
 
 // POST(Create) Author
-exports.createAuthor = async(req,res) => {
+exports.createAuthor = async(req,res, next) => {
     try{
         const author = await Author.create(req.body)
         res.status(201).json({message: "Succefully created!", data: author})
     } catch(error){
-        res.status(500).json({message: error.message})
+        next(error);
     }
 };
 
 // GET all authors
-exports.getAuthors = async(req,res) => {
+exports.getAuthors = async(req,res, next) => {
     try{
         const author = await Author.find({})
 
         res.status(200).json(author)
     } catch(error){
-        res.status(500).json({message: error.message})
+        next(error);
     }
 };
 
-// GET a sungle author
-exports.getAuthor = async(req,res) => {
+// GET a single author
+exports.getAuthor = async(req,res, next) => {
     try{
         const {id} = req.params;
         const author = await Author.findById(id);
@@ -32,12 +32,12 @@ exports.getAuthor = async(req,res) => {
 
         res.status(200).json(author)
     } catch(error){
-        res.status(500).json({message: error.message})
+        next(error);
     }
 };
 
 // Update author
-exports.updateAuthor = async(req,res) => {
+exports.updateAuthor = async(req,res, next) => {
     try{
         const {id} = req.params;
         const author = await Author.findByIdAndUpdate(id, req.body, {new: true, runValidators: true});
@@ -47,12 +47,12 @@ exports.updateAuthor = async(req,res) => {
 
         res.status(201).json(author)
     } catch(error){
-        res.status(500).json({message: error.message})
+        next(error);
     }
 };
 
 // Delete author
-exports.deleteAuthor = async(req,res) => {
+exports.deleteAuthor = async(req,res, next) => {
     try{
         const {id} = req.params;
         const author = await Author.findByIdAndDelete(id)
@@ -62,7 +62,7 @@ exports.deleteAuthor = async(req,res) => {
 
         res.status(200).json({message: "Author successfully deleted!"})
     } catch(error){
-        res.status(500).json({message: error.message})
+        next(error);
     }
 };
 

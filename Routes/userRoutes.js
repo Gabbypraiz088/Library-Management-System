@@ -6,7 +6,7 @@ const {protect} = require('../middleware/authMiddleware');
 const {authorizeRoles} = require('../middleware/rolesMiddleware');
 
 
-router.post('/', protect, authorizeRoles('admin'), userController.createUser); // create student/attendant/admin
+router.post('/', protect, authorizeRoles('admin'), userController.createUser); 
 router.get('/students', protect, authorizeRoles('attendant', 'admin'), userController.getStudents);
 router.get('/attendants', protect, authorizeRoles('admin'), userController.getAttendants);
 router.put('/:id', protect, authorizeRoles('attendant', 'admin'), userController.updateUser); // handle all deletions
