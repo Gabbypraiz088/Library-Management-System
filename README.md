@@ -22,6 +22,9 @@ It allows users to manage books, authors, and perform operations like borrowing 
 - Express.js
 - MongoDB / Mongoose
 - JSON Web Token (JWT) for authentication
+- bcryptjs for password hashing
+- dotenv for environment variables
+- express-validator for input validation
 
 ---
 
